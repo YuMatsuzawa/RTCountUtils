@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="MS932" standalone="no"?>
+<jardesc>
+    <jar path="//str33/laboshare/RTCount.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/RTCount/build.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=RTCount/src&lt;matz{RTCount.java[RTCount" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/RTCount/.classpath"/>
+        <javaElement handleIdentifier="=RTCount/src"/>
+        <file path="/RTCount/.project"/>
+        <folder path="/RTCount/.settings"/>
+        <file path="/RTCount/build.jardesc"/>
+    </selectedElements>
+</jardesc>

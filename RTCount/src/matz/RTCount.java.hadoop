@@ -1,0 +1,87 @@
+package matz;
+
+//とりあえず様子見でretweet_urlに入っているツイートを数え上げる
+//hadoopでやろうかなあと思ったけどhadoopでやらなくてもいい気がしてきた
+
+import java.io.*;
+import java.util.Date;
+import java.util.Formatter;
+
+import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+public class RTCount {
+	public static class Map extends
+	Mapper<LongWritable, Text, Text, Text> {
+		//retweeted_urlがnullでなければそのURLをKeyとし、valueをそのtweetのvalueとする。
+		//retweeted_urlがnullなら
+		private final static IntWritable one = new IntWritable(1);
+		private Text srcURL = new Text();
+		@Override
+		protected void map(LongWritable key, Text value, Context context)
+		throws IOException, InterruptedException {
+			
+		}
+		
+	}
+	
+	public static class Reduce extends
+	Reducer<Text, Text, Text, Text> {
+		@Override
+		protected void reduce(Text key, Iterable<Text> values, Context context) 
+		throws IOException, InterruptedException {
+			
+		}
+	}
+	
+	public static void main (String[] args) {
+		try{
+			Configuration conf = new Configuration();
+			GenericOptionsParser parser = new GenericOptionsParser(conf, args);
+			args = parser.getRemainingArgs();
+			
+			Job job = new Job(conf, "RTCount");
+			job.setJarByClass(RTCount.class);
+			job.setMapperClass(Map.class);
+			job.setReducerClass(Reduce.class);
+			//Interface
+			job.setMapOutputKeyClass(Text.class);
+			job.setMapOutputValueClass(IntWritable.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(IntWritable.class);
+			//I/O formatting
+			//TextInputFormat/TextOutputFormatは入力をどのようにKey-Valueペアに解釈してMapperに投入するか、その方法の一つ
+			//ここではKeyにオフセット(ファイル先頭からの文字数),Valueにその行の内容すべてが入り、処理としては行単位で行う
+			job.setInputFormatClass(TextInputFormat.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
+			job.setNumReduceTasks(1);
+			//I/O path
+			Formatter formatter = new Formatter();
+			String outpath = "Output" + formatter.format("%1$tm%1$td%1$tH%1$tM%1$tS", new Date());
+			formatter.close();
+			FileInputFormat.setInputPaths(job, new Path(args[0]));
+			FileOutputFormat.setOutputPath(job, new Path(outpath));
+			//Submit job to Jobtracker
+			boolean success = job.waitForCompletion(true);
+			System.out.println(success);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+	}
+}
